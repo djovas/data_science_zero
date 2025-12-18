@@ -56,4 +56,32 @@ num_friends_by_id.sort(key=lambda id_and_friends: id_and_friends[1], reverse=Tru
 
 num_friends_by_id
 
+
+
+# %%
+# friend for a friend
+def foaf_ids_bad(user):
+    return [foaf_id
+            for friend_id in friendships[user['id']]
+            for foaf_id in friendships[friend_id]
+            ]
+
+foaf_ids_bad(users[0])
+
+
+# %%
+from collections import Counter
+
+def friends_of_friend(user):
+    user_id = user['id']
+    return Counter(
+        foaf_id
+        for friend_id in friendships[user_id]
+        for foaf_id in friendships[friend_id]
+        if foaf_id != user_id
+        and foaf_id not in friendships[user_id]
+    )
+
+print(friends_of_friend(users[3]))
+
 # %%
